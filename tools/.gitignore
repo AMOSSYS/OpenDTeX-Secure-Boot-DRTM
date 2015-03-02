@@ -1,0 +1,9 @@
+*.o
+tcg_createkey
+tcg_extend
+tcg_readpcr
+tcg_seal
+tcg_testaes
+tcg_unseal
+dtex_rom_getpubkey
+dtex_verify

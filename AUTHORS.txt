@@ -1,0 +1,8 @@
+Contributors
+------------
+
+  * Goulven Guiheux (AMOSSYS)
+  * Frédéric Guihéry (AMOSSYS)
+  * Dimitri Kirchner (AMOSSYS)
+  * Erwan Le Disez (Bertin)
+  * Victor Mallet (Bertin)

@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+libspic=${libdir}/@PACKAGE_NAME@-pic.a
+
+Name: @PACKAGE_NAME@
+Description: Tiny Video library.
+Requires: 
+Version: @PACKAGE_VERSION@
+Libs: ${libdir}/@PACKAGE_NAME@.a
+Cflags: -I${includedir}/uvideo

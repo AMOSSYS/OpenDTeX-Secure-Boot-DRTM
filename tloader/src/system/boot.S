@@ -1,0 +1,760 @@
+// -*- coding: utf-8 -*-
+
+/*
+ * Copyright (c) 2012-2014, AMOSSYS, Bertin
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the organizations nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*
+ *  GRUB  --  GRand Unified Bootloader
+ *  Copyright (C) 2008  Free Software Foundation, Inc.
+ *
+ *  GRUB is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  GRUB is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * File contributors:
+ *   - Goulven Guiheux (AMOSSYS)
+ */
+
+
+#include <tloader.h>
+#include <multiboot.h>
+
+#define MULTIBOOT_HEADER_FLAGS (MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO | MULTIBOOT_VIDEO_MODE)
+
+/*#define MSR_IA32_APICBASE 0x1b
+#define LAPIC_INTERPROC0 0x300
+#define LAPIC_INTERPROC1 0x310
+#define LAPIC_INTERPROC0_OFF_DLVSTS 12*/
+
+// multiboot header
+.section ".tloader_multiboot_header","w"
+		.align 4
+		// magic number for multiboot header
+		.long MULTIBOOT_HEADER_MAGIC
+		/* flags for bootloader */
+		.long MULTIBOOT_HEADER_FLAGS
+		// checksum: negated sum of above
+		.long -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
+		
+		.long 0
+		.long 0
+		.long 0
+		.long 0
+		.long 0
+		
+		.long 0        // Graphical mode
+		.long 0        // Width
+		.long 0        // Height
+		.long 32       // Color depth
+
+		.text
+		
+// main entry
+		.code32
+ENTRY(start)
+ENTRY(_start)
+ENTRY(_stext)
+
+		// Disable interrupts
+		cli
+
+		// Set GDT
+		lgdt	%cs:gdt_descr
+		mov	$(ds_sel), %cx
+		mov	%cx, %ds
+		mov	%cx, %es
+		mov	%cx, %fs
+		mov	%cx, %gs
+		mov	%cx, %ss
+		ljmp	$(cs_sel), $(1f)
+1:		
+		// Set stack
+		leal	stack, %ebp
+		leal	stack, %esp
+		
+		// Set IDT
+		lidt	idt_descr
+
+		push	%ebx
+		push	%eax
+
+      mov   %ebx, %edx
+      
+		// Do some init stuff
+		call	systeminit
+		
+		// Enable interrupts
+		sti
+
+		call	tloader_main
+		hlt
+.endless:
+      jmp   .endless
+		
+.macro GENINTR num
+		.align 4
+	interrupt_handler_\num:
+		pusha
+		movl  %esp, %ebp
+		pushl %esp
+		pushl $\num
+		call	interrupt_handler_gen
+		movl  %ebp, %esp
+		popa
+		iret
+.endm
+
+GENINTR	0
+GENINTR	1
+GENINTR	2
+GENINTR	3
+GENINTR	4
+GENINTR	5
+GENINTR	6
+GENINTR	7
+GENINTR	8
+GENINTR	9
+GENINTR	10
+GENINTR	11
+GENINTR	12
+GENINTR	13
+GENINTR	14
+GENINTR	15
+GENINTR	16
+GENINTR	17
+GENINTR	18
+GENINTR	19
+GENINTR	20
+GENINTR	21
+GENINTR	22
+GENINTR	23
+GENINTR	24
+GENINTR	25
+GENINTR	26
+GENINTR	27
+GENINTR	28
+GENINTR	29
+GENINTR	30
+GENINTR	31
+GENINTR	32
+GENINTR	33
+GENINTR	34
+GENINTR	35
+GENINTR	36
+GENINTR	37
+GENINTR	38
+GENINTR	39
+GENINTR	40
+GENINTR	41
+GENINTR	42
+GENINTR	43
+GENINTR	44
+GENINTR	45
+GENINTR	46
+GENINTR	47
+GENINTR	48
+GENINTR	49
+GENINTR	50
+GENINTR	51
+GENINTR	52
+GENINTR	53
+GENINTR	54
+GENINTR	55
+GENINTR	56
+GENINTR	57
+GENINTR	58
+GENINTR	59
+GENINTR	60
+GENINTR	61
+GENINTR	62
+GENINTR	63
+GENINTR	64
+GENINTR	65
+GENINTR	66
+GENINTR	67
+GENINTR	68
+GENINTR	69
+GENINTR	70
+GENINTR	71
+GENINTR	72
+GENINTR	73
+GENINTR	74
+GENINTR	75
+GENINTR	76
+GENINTR	77
+GENINTR	78
+GENINTR	79
+GENINTR	80
+GENINTR	81
+GENINTR	82
+GENINTR	83
+GENINTR	84
+GENINTR	85
+GENINTR	86
+GENINTR	87
+GENINTR	88
+GENINTR	89
+GENINTR	90
+GENINTR	91
+GENINTR	92
+GENINTR	93
+GENINTR	94
+GENINTR	95
+GENINTR	96
+GENINTR	97
+GENINTR	98
+GENINTR	99
+GENINTR	100
+GENINTR	101
+GENINTR	102
+GENINTR	103
+GENINTR	104
+GENINTR	105
+GENINTR	106
+GENINTR	107
+GENINTR	108
+GENINTR	109
+GENINTR	110
+GENINTR	111
+GENINTR	112
+GENINTR	113
+GENINTR	114
+GENINTR	115
+GENINTR	116
+GENINTR	117
+GENINTR	118
+GENINTR	119
+GENINTR	120
+GENINTR	121
+GENINTR	122
+GENINTR	123
+GENINTR	124
+GENINTR	125
+GENINTR	126
+GENINTR	127
+GENINTR	128
+GENINTR	129
+GENINTR	130
+GENINTR	131
+GENINTR	132
+GENINTR	133
+GENINTR	134
+GENINTR	135
+GENINTR	136
+GENINTR	137
+GENINTR	138
+GENINTR	139
+GENINTR	140
+GENINTR	141
+GENINTR	142
+GENINTR	143
+GENINTR	144
+GENINTR	145
+GENINTR	146
+GENINTR	147
+GENINTR	148
+GENINTR	149
+GENINTR	150
+GENINTR	151
+GENINTR	152
+GENINTR	153
+GENINTR	154
+GENINTR	155
+GENINTR	156
+GENINTR	157
+GENINTR	158
+GENINTR	159
+GENINTR	160
+GENINTR	161
+GENINTR	162
+GENINTR	163
+GENINTR	164
+GENINTR	165
+GENINTR	166
+GENINTR	167
+GENINTR	168
+GENINTR	169
+GENINTR	170
+GENINTR	171
+GENINTR	172
+GENINTR	173
+GENINTR	174
+GENINTR	175
+GENINTR	176
+GENINTR	177
+GENINTR	178
+GENINTR	179
+GENINTR	180
+GENINTR	181
+GENINTR	182
+GENINTR	183
+GENINTR	184
+GENINTR	185
+GENINTR	186
+GENINTR	187
+GENINTR	188
+GENINTR	189
+GENINTR	190
+GENINTR	191
+GENINTR	192
+GENINTR	193
+GENINTR	194
+GENINTR	195
+GENINTR	196
+GENINTR	197
+GENINTR	198
+GENINTR	199
+GENINTR	200
+GENINTR	201
+GENINTR	202
+GENINTR	203
+GENINTR	204
+GENINTR	205
+GENINTR	206
+GENINTR	207
+GENINTR	208
+GENINTR	209
+GENINTR	210
+GENINTR	211
+GENINTR	212
+GENINTR	213
+GENINTR	214
+GENINTR	215
+GENINTR	216
+GENINTR	217
+GENINTR	218
+GENINTR	219
+GENINTR	220
+GENINTR	221
+GENINTR	222
+GENINTR	223
+GENINTR	224
+GENINTR	225
+GENINTR	226
+GENINTR	227
+GENINTR	228
+GENINTR	229
+GENINTR	230
+GENINTR	231
+GENINTR	232
+GENINTR	233
+GENINTR	234
+GENINTR	235
+GENINTR	236
+GENINTR	237
+GENINTR	238
+GENINTR	239
+GENINTR	240
+GENINTR	241
+GENINTR	242
+GENINTR	243
+GENINTR	244
+GENINTR	245
+GENINTR	246
+GENINTR	247
+GENINTR	248
+GENINTR	249
+GENINTR	250
+GENINTR	251
+GENINTR	252
+GENINTR	253
+GENINTR	254
+GENINTR	255
+
+/**********************************************************************************************/
+
+		.data
+		
+//	GDT
+gdt_descr:
+	.word	gdt_table_end - gdt_table - 1
+	.long	gdt_table
+	
+	// GDT
+	.align 4096, 0
+ENTRY(gdt_table)
+	.quad	0x0000000000000000	// fake
+cs_descr:			// cs segment
+	.word	0xffff	// 	limit = 4GB
+	.word	0x00		// 	base = 0
+	.word	0x9b00	// 	read + exec + accessed
+	.word	0x00cf	// 	granularity = 4096
+ds_descr:			// ds segment
+	.word	0xffff	// 	limit = 4GB
+	.word	0x00		// 	base = 0
+	.word	0x9300	//	 	read + write + accessed
+	.word	0x00cf	//		granularity = 4096
+tss_descr:			// tss segment 
+	.word	0xffff	// 	limit = 4GB
+	.word	0x00		// 	base = 0
+	.word	0x8900	// 	system segment, 32b available TSS
+	.word	0x008f	// 	granularity = 4096
+cs16_desc:			// cs16 segment (16 bits)
+	.word	0xffff	// 	limit = 4GB
+	.word   0x0000	//		base = 0
+	.word   0x9b00	//		read + exec + accessed
+	.word	0x008f   //		granularity = 4096, D = 0
+ds16_desc:  		// ds16 segment (16 bits)
+	.word   0xffff	//		limit = 4GB
+	.word   0x0000	//		base = 0 
+	.word   0x9300	//		read + exec + accessed
+	.word   0x008f	//		granularity = 4096, D = 0
+	.quad   0x0000000000000000	// fake
+gdt_table_end:
+
+// IDT
+idt_descr:
+	.word	idt_table_end - idt_table - 1
+	.long	idt_table
+
+ENTRY(idt_table)
+	.macro GENVECTOR num
+		.word	(interrupt_handler_\num - _start + TLOADER_START) & 0xffff
+		.word	cs_sel
+		.word	0x8e00   // present, DPL=0, 32b, interrupt
+		.word	(interrupt_handler_\num - _start + TLOADER_START) >> 16
+	.endm
+	
+	GENVECTOR	0
+	GENVECTOR	1
+	GENVECTOR	2
+	GENVECTOR	3
+	GENVECTOR	4
+	GENVECTOR	5
+	GENVECTOR	6
+	GENVECTOR	7
+	GENVECTOR	8
+	GENVECTOR	9
+	GENVECTOR	10
+	GENVECTOR	11
+	GENVECTOR	12
+	GENVECTOR	13
+	GENVECTOR	14
+	GENVECTOR	15
+	GENVECTOR	16
+	GENVECTOR	17
+	
+	// for machine-check exception
+	.word	(interrupt_handler_18 - _start + TLOADER_START) & 0xffff
+	.word	cs_sel
+	.word	0x8f00   // present, DPL=0, 32b, trap
+	.word	(interrupt_handler_18 - _start + TLOADER_START) >> 16
+	
+	GENVECTOR	19
+	GENVECTOR	20
+	GENVECTOR	21
+	GENVECTOR	22
+	GENVECTOR	23
+	GENVECTOR	24
+	GENVECTOR	25
+	GENVECTOR	26
+	GENVECTOR	27
+	GENVECTOR	28
+	GENVECTOR	29
+	GENVECTOR	30
+	GENVECTOR	31
+	GENVECTOR	32
+	GENVECTOR	33
+	GENVECTOR	34
+	GENVECTOR	35
+	GENVECTOR	36
+	GENVECTOR	37
+	GENVECTOR	38
+	GENVECTOR	39
+	GENVECTOR	40
+	GENVECTOR	41
+	GENVECTOR	42
+	GENVECTOR	43
+	GENVECTOR	44
+	GENVECTOR	45
+	GENVECTOR	46
+	GENVECTOR	47
+	GENVECTOR	48
+	GENVECTOR	49
+	GENVECTOR	50
+	GENVECTOR	51
+	GENVECTOR	52
+	GENVECTOR	53
+	GENVECTOR	54
+	GENVECTOR	55
+	GENVECTOR	56
+	GENVECTOR	57
+	GENVECTOR	58
+	GENVECTOR	59
+	GENVECTOR	60
+	GENVECTOR	61
+	GENVECTOR	62
+	GENVECTOR	63
+	GENVECTOR	64
+	GENVECTOR	65
+	GENVECTOR	66
+	GENVECTOR	67
+	GENVECTOR	68
+	GENVECTOR	69
+	GENVECTOR	70
+	GENVECTOR	71
+	GENVECTOR	72
+	GENVECTOR	73
+	GENVECTOR	74
+	GENVECTOR	75
+	GENVECTOR	76
+	GENVECTOR	77
+	GENVECTOR	78
+	GENVECTOR	79
+	GENVECTOR	80
+	GENVECTOR	81
+	GENVECTOR	82
+	GENVECTOR	83
+	GENVECTOR	84
+	GENVECTOR	85
+	GENVECTOR	86
+	GENVECTOR	87
+	GENVECTOR	88
+	GENVECTOR	89
+	GENVECTOR	90
+	GENVECTOR	91
+	GENVECTOR	92
+	GENVECTOR	93
+	GENVECTOR	94
+	GENVECTOR	95
+	GENVECTOR	96
+	GENVECTOR	97
+	GENVECTOR	98
+	GENVECTOR	99
+	GENVECTOR	100
+	GENVECTOR	101
+	GENVECTOR	102
+	GENVECTOR	103
+	GENVECTOR	104
+	GENVECTOR	105
+	GENVECTOR	106
+	GENVECTOR	107
+	GENVECTOR	108
+	GENVECTOR	109
+	GENVECTOR	110
+	GENVECTOR	111
+	GENVECTOR	112
+	GENVECTOR	113
+	GENVECTOR	114
+	GENVECTOR	115
+	GENVECTOR	116
+	GENVECTOR	117
+	GENVECTOR	118
+	GENVECTOR	119
+	GENVECTOR	120
+	GENVECTOR	121
+	GENVECTOR	122
+	GENVECTOR	123
+	GENVECTOR	124
+	GENVECTOR	125
+	GENVECTOR	126
+	GENVECTOR	127
+	GENVECTOR	128
+	GENVECTOR	129
+	GENVECTOR	130
+	GENVECTOR	131
+	GENVECTOR	132
+	GENVECTOR	133
+	GENVECTOR	134
+	GENVECTOR	135
+	GENVECTOR	136
+	GENVECTOR	137
+	GENVECTOR	138
+	GENVECTOR	139
+	GENVECTOR	140
+	GENVECTOR	141
+	GENVECTOR	142
+	GENVECTOR	143
+	GENVECTOR	144
+	GENVECTOR	145
+	GENVECTOR	146
+	GENVECTOR	147
+	GENVECTOR	148
+	GENVECTOR	149
+	GENVECTOR	150
+	GENVECTOR	151
+	GENVECTOR	152
+	GENVECTOR	153
+	GENVECTOR	154
+	GENVECTOR	155
+	GENVECTOR	156
+	GENVECTOR	157
+	GENVECTOR	158
+	GENVECTOR	159
+	GENVECTOR	160
+	GENVECTOR	161
+	GENVECTOR	162
+	GENVECTOR	163
+	GENVECTOR	164
+	GENVECTOR	165
+	GENVECTOR	166
+	GENVECTOR	167
+	GENVECTOR	168
+	GENVECTOR	169
+	GENVECTOR	170
+	GENVECTOR	171
+	GENVECTOR	172
+	GENVECTOR	173
+	GENVECTOR	174
+	GENVECTOR	175
+	GENVECTOR	176
+	GENVECTOR	177
+	GENVECTOR	178
+	GENVECTOR	179
+	GENVECTOR	180
+	GENVECTOR	181
+	GENVECTOR	182
+	GENVECTOR	183
+	GENVECTOR	184
+	GENVECTOR	185
+	GENVECTOR	186
+	GENVECTOR	187
+	GENVECTOR	188
+	GENVECTOR	189
+	GENVECTOR	190
+	GENVECTOR	191
+	GENVECTOR	192
+	GENVECTOR	193
+	GENVECTOR	194
+	GENVECTOR	195
+	GENVECTOR	196
+	GENVECTOR	197
+	GENVECTOR	198
+	GENVECTOR	199
+	GENVECTOR	200
+	GENVECTOR	201
+	GENVECTOR	202
+	GENVECTOR	203
+	GENVECTOR	204
+	GENVECTOR	205
+	GENVECTOR	206
+	GENVECTOR	207
+	GENVECTOR	208
+	GENVECTOR	209
+	GENVECTOR	210
+	GENVECTOR	211
+	GENVECTOR	212
+	GENVECTOR	213
+	GENVECTOR	214
+	GENVECTOR	215
+	GENVECTOR	216
+	GENVECTOR	217
+	GENVECTOR	218
+	GENVECTOR	219
+	GENVECTOR	220
+	GENVECTOR	221
+	GENVECTOR	222
+	GENVECTOR	223
+	GENVECTOR	224
+	GENVECTOR	225
+	GENVECTOR	226
+	GENVECTOR	227
+	GENVECTOR	228
+	GENVECTOR	229
+	GENVECTOR	230
+	GENVECTOR	231
+	GENVECTOR	232
+	GENVECTOR	233
+	GENVECTOR	234
+	GENVECTOR	235
+	GENVECTOR	236
+	GENVECTOR	237
+	GENVECTOR	238
+	GENVECTOR	239
+	GENVECTOR	240
+	GENVECTOR	241
+	GENVECTOR	242
+	GENVECTOR	243
+	GENVECTOR	244
+	GENVECTOR	245
+	GENVECTOR	246
+	GENVECTOR	247
+	GENVECTOR	248
+	GENVECTOR	249
+	GENVECTOR	250
+	GENVECTOR	251
+	GENVECTOR	252
+	GENVECTOR	253
+	GENVECTOR	254
+	GENVECTOR	255
+
+idt_table_end:
+
+real_idt_desc:
+	.word   0x03ff
+	.long   0
+
+.section ".bss.stack_aligned","w"
+
+stack_end:
+	.fill STACK_SIZE, 1, 0
+stack:
+
+
+
+	/*.long 0xdeadbeef
+	.align 4096, 0
+	.long 0xdeadbeef*/
+	
+		/*//Write halt opcode at 0x9e000
+		mov	$0x9e000, %eax
+		movb	$0xf4, (%eax)
+				
+		mov	$MSR_IA32_APICBASE, %ecx
+		rdmsr
+		and	$0xfffff000, %eax
+		
+		mov	%eax, %edi						// edi = @lapic_cal_handler
+		
+1:		//Get Delivery status of local apic
+		mov	LAPIC_INTERPROC0(%edi), %eax
+		bt		$LAPIC_INTERPROC0_OFF_DLVSTS, %eax
+		jnc	1f
+		pause
+		jmp 	1b	
+1:
+		//	Send SIPI
+		mov	$0x0f000000, %eax
+		mov	%eax, LAPIC_INTERPROC1(%edi)
+		mov	$0x000c469e, %eax
+		mov	%eax, LAPIC_INTERPROC0(%edi)
+		pause
+		pause
+		pause
+		pause
+		pause*/
