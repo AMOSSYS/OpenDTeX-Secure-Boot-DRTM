@@ -9,9 +9,10 @@ The OpenDTeX research project aims at providing trusted building
 blocks to ensure strong security properties during the boot chain and
 to allow secure execution of isolated enclaves on x86
 architectures. OpenDTeX has been achieved with the help of the French
-“RAPID” grant process, which targets both civil and defense use cases,
-through a consortium composed of AMOSSYS, Bertin Technologies and
-Telecom ParisTech.
+“`RAPID <http://www.ixarm.com/Projets-d-innovation-duale-RAPID>`_”
+grant process, which targets both civil and defense use cases, through
+a consortium composed of AMOSSYS, Bertin Technologies and Telecom
+ParisTech.
 
 This project leverages TCG technologies, such as TPM and DRTM, to
 provide trusted execution of a minimal TCB (Trusted Computing
@@ -26,11 +27,17 @@ system.
 We provide here the implementation of the Secure Boot component in
 DRTM mode.
 
-Authors
-=======
+Authors and Sponsors
+====================
 
 See the top distribution file ``AUTHORS.txt`` for the detailed and updated list
 of authors.
+
+Project sponsors:
+
+* AMOSSYS: `http://www.amossys.fr <http://www.amossys.fr>`_
+* Bertin Technologies: `http://www.bertin.fr <http://www.bertin.fr>`_
+* Telecom ParisTech: `https://www.telecom-paristech.fr <https://www.telecom-paristech.fr>`_
 
 License
 =======
@@ -49,6 +56,7 @@ OpenDTeX developments
 =====================
 
 OpenDTeX work notably include:
+
 * A TPM 1.2 API library independent from the BIOS or OS
 * A minimal TSS API library independent from the OS
 * An extension of Grub 2 (i.e. an SRTM implementation)
@@ -161,5 +169,6 @@ Acknowledgment
 ==============
 
 We would like to thanks people behind the following projects:
+
 * Intel Trusted Boot: http://sourceforge.net/projects/tboot/
 * Flicker: http://sourceforge.net/projects/flickertcb/
