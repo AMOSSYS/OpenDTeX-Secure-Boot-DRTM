@@ -35,7 +35,7 @@ of authors.
 License
 =======
 
-This software is licensed under the simplified BSD License. See the
+This software is licensed under the Modified BSD License. See the
 ``COPYING.txt`` file for the full license text.
 
 More Information
