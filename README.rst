@@ -50,7 +50,7 @@ More Information
 
 :Website: `https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM <https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM>`_
 :Email: `etudes@amossys.fr <etudes@amossys.fr>`_
-:Twitter: Follow AMOSSYS's official accounts (@amossys)
+:Twitter: Follow AMOSSYS's official accounts (`@amossys <https://twitter.com/Amossys>`_)
 
 OpenDTeX developments
 =====================
@@ -133,24 +133,24 @@ received through multiboot structure of Grub.
 Usage of the Secure Boot in DRTM mode
 =====================================
 
-Create a TPM key:
+Create a TPM key::
 
   $ cd tools/
   $ make
   $ tcg_createkey -k | -z depth key1.key PCR1:PCR2
 
-Seal a secret text message:
+Seal a secret text message::
 
   $ echo "My secret message" > /tmp/test
   $ python createStruct.py text /tmp/test > /tmp/test.data
   $ ./tcg_seal -i /tmp/test.data -o data.seal -z -k key1.key
 
-Put the sealed data in the boot directory:
+Put the sealed data in the boot directory::
 
   $ sudo mkdir /boot/opendtex/
   $ sudo cp data.seal /boot/opendtex/data.seal
 
-Or seal a secret image:
+Or seal a secret image::
 
   $ python createStruct.py image zoby.bmp > /tmp/test
 
@@ -159,7 +159,7 @@ Or seal a secret image:
   $ ./tcg_seal -i /tmp/test.data -o data.seal -z -k key1.key
 
 Put the sealed data (either the message or the image) in the boot
-directory:
+directory::
 
   $ sudo mkdir /boot/opendtex/
   $ sudo cp data.seal /boot/opendtex/data.seal
