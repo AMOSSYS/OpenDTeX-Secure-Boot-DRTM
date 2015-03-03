@@ -35,9 +35,9 @@ of authors.
 
 Project sponsors:
 
-* AMOSSYS: `http://www.amossys.fr <http://www.amossys.fr>`_
-* Bertin Technologies: `http://www.bertin.fr <http://www.bertin.fr>`_
-* Telecom ParisTech: `https://www.telecom-paristech.fr <https://www.telecom-paristech.fr>`_
+* [AMOSSYS](http://www.amossys.fr)
+* [Bertin Technologies](http://www.bertin.fr)
+* [Telecom ParisTech](https://www.telecom-paristech.fr)
 
 
 ## License
@@ -48,9 +48,9 @@ This software is licensed under the Modified BSD License. See the
 
 ## More Information
 
-:Website: `https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM <https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM>`_
-:Email: `etudes@amossys.fr <etudes@amossys.fr>`_
-:Twitter: Follow AMOSSYS's official accounts (`@amossys <https://twitter.com/Amossys>`_)
+| Website  | [https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM](https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM) |
+| Email    | etudes@amossys.fr |
+| Twitter  | Follow AMOSSYS's official accounts ([@amossys](https://twitter.com/Amossys) |
 
 
 ## OpenDTeX developments
@@ -200,66 +200,80 @@ In order to compile the OpenDTeX Secure Boot components, you should have:
 
 #### Compilation and installation of libuc
 
-In "libuc/"::
+In "libuc/":
 
-  $ ./autogen.sh
-  $ ./configure --prefix=/opt/ulib
-  $ make
-  $ sudo make install
+```
+$ ./autogen.sh
+$ ./configure --prefix=/opt/ulib
+$ make
+$ sudo make install
+```
 
 #### Compilation and installation of uvideo
 
-In "libuvideo/"::
+In "libuvideo/":
 
-  $ ./autogen.sh
-  $ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure --prefix=/opt/ulib
-  $ make
-  $ sudo make install
+```
+$ ./autogen.sh
+$ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure --prefix=/opt/ulib
+$ make
+$ sudo make install
+```
 
 #### Compilation and installation of libtpm
 
-In "libtpm/"::
+In "libtpm/":
 
-  $ ./autogen.sh
-  $ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure --prefix=/opt/ulib
-  $ make
-  $ sudo make install
+```
+$ ./autogen.sh
+$ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure --prefix=/opt/ulib
+$ make
+$ sudo make install
+```
 
 #### Compilation and installation of libtxt
 
-In "libtxt/"::
+In "libtxt/":
 
-  $ ./autogen.sh
-  $ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure --prefix=/opt/ulib
-  $ make
-  $ sudo make install
+```
+$ ./autogen.sh
+$ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure --prefix=/opt/ulib
+$ make
+$ sudo make install
+```
 
 #### Compilation and installation of Tloader
 
-In "tloader/"::
+In "tloader/":
 
-  $ ./autogen.sh
-  $ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure
-  $ make
+```
+$ ./autogen.sh
+$ PKG_CONFIG_PATH=/opt/ulib/lib/pkgconfig ./configure
+$ make
+```
 
 This last step will generate a file tloader.gz. You have to place this
 file in the directory "/boot/".
 
 #### Compilation and installation of Trusted Boot
 
-Trusted Boot in available on Sourceforge: http://sourceforge.net/projects/tboot/
+Trusted Boot in available on Sourceforge:
+[http://sourceforge.net/projects/tboot/](http://sourceforge.net/projects/tboot/)
 
-Once the archive has been downloaded, go inside the tboot/ directory, and then::
+Once the archive has been downloaded, go inside the tboot/ directory, and then:
 
-  $ make
-  $ sudo make install
+```
+$ make
+$ sudo make install
+```
 
 This last step will copy the file tboot.gz (the loader) in the directory "/boot/".
 
 #### Deployment of the AC SINIT module
 
 You have to retrieve the AC SINIT module that is compatible with your
-chipset/processor on Intel website: http://software.intel.com/en-us/articles/intel-trusted-execution-technology.
+chipset/processor on Intel website:
+[http://software.intel.com/en-us/articles/intel-trusted-execution-technology](http://software.intel.com/en-us/articles/intel-trusted-execution-technology).
 
 The AC SINIT module have to be copied in the directory "/boot/".
 
@@ -270,63 +284,72 @@ Create a TPM key, such that it can be loaded again inside the TPM
 memory if the PCR1 and PCR2 have the same content that they had during
 key creation::
 
-  $ cd tools/
-  $ make
-  $ tcg_createkey -k | -z depth key1.key PCR1:PCR2
+```
+$ cd tools/
+$ make
+$ tcg_createkey -k | -z depth key1.key PCR1:PCR2
+```
 
 Seal a secret text message with this TPM key, and tell the TPM to seal
 the object so that it can be decrypted again if contents of PCR17,
 PCR18 and PCR19 have not changed::
 
-  $ echo "My secret message" > /tmp/test
-  $ python createStruct.py text /tmp/test > /tmp/test.data
-  $ ./tcg_seal -i /tmp/test.data -o data.seal -z -k key1.key -p 17:18:19
-  (0000)-> SRK(WellKnown : 1)
-  (0001)-> key1.key(WellKnown : 1)(00000000)
-  | child of SRK
-  symmetric key : b0 49 e5 34 9b f1 c5 59 d3 b5 82 03 58 68 9f a2 f1 ad e4 d3 1c dd 18 bb 01
+```
+$ echo "My secret message" > /tmp/test
+$ python createStruct.py text /tmp/test > /tmp/test.data
+$ ./tcg_seal -i /tmp/test.data -o data.seal -z -k key1.key -p 17:18:19
+(0000)-> SRK(WellKnown : 1)
+(0001)-> key1.key(WellKnown : 1)(00000000)
+| child of SRK
+symmetric key : b0 49 e5 34 9b f1 c5 59 d3 b5 82 03 58 68 9f a2 f1 ad e4 d3 1c dd 18 bb 01
+```
 
 Or seal a secret image::
 
-  $ python createStruct.py image zoby.bmp > /tmp/test.data
-  $ ./tcg_seal -i /tmp/test.data -o data.seal -z -k key1.key
+```
+$ python createStruct.py image zoby.bmp > /tmp/test.data
+$ ./tcg_seal -i /tmp/test.data -o data.seal -z -k key1.key
+```
 
 Put the sealed data (either the message or the image) in the boot directory::
 
-  $ sudo mkdir /boot/opendtex/
-  $ sudo cp data.seal /boot/opendtex/data.seal
-
+```
+$ sudo mkdir /boot/opendtex/
+$ sudo cp data.seal /boot/opendtex/data.seal
+```
 
 ### Configuration of Grub
 
 Here is a Grub 2 configuration file example, that permits to launch Trusted Boot, then to execute a DRTM, and then to give execution flow to the TLoader MLE. The TLoader then interpret the command::
 
-  menuentry 'TBoot+TLoader' {
-    # GRUB2 modules
-    insmod gzio
-    insmod part_msdos
-    insmod ext2
-    # To find system disk boot partition
-    set root='(/dev/sda,msdos5)'
-    search --no-floppy --fs-uuid --set=root 86cf0374-fbf3-4d36-9b5c-45303f24c17a
+```
+menuentry 'TBoot+TLoader' {
+  # GRUB2 modules
+  insmod gzio
+  insmod part_msdos
+  insmod ext2
+  # To find system disk boot partition
+  set root='(/dev/sda,msdos5)'
+  search --no-floppy --fs-uuid --set=root 86cf0374-fbf3-4d36-9b5c-45303f24c17a
 
-    # TrustedBoot main module to start
-    multiboot /boot/tboot.gz /boot/tboot.gz logging=vga,memory,serial
+  # TrustedBoot main module to start
+  multiboot /boot/tboot.gz /boot/tboot.gz logging=vga,memory,serial
 
-    # The platform specific AC module
-    module /boot/SINIT
+  # The platform specific AC module
+  module /boot/SINIT
 
-    # TLoader module launched by TrustedBoot
-    module /boot/tloader.gz /boot/tloader.gz logging=vga
+  # TLoader module launched by TrustedBoot
+  module /boot/tloader.gz /boot/tloader.gz logging=vga
 
-    # Entry to display the secure banner (with a key to load)
-    module /boot/opendtex/key1.key /boot/opendtex/key1.key tpm_loadkey aliasKey1 aliasSRK
-    module /boot/opendtex/data.seal /boot/opendtex/data.seal tpm_banner aliasKey1
+  # Entry to display the secure banner (with a key to load)
+  module /boot/opendtex/key1.key /boot/opendtex/key1.key tpm_loadkey aliasKey1 aliasSRK
+  module /boot/opendtex/data.seal /boot/opendtex/data.seal tpm_banner aliasKey1
 
-    # The OS image to start
-    module /boot/vmlinuz /boot/vmlinuz kdb=fr vga=791 root=/dev/hda1 ...
-    module /boot/initrd /boot/initrd
-  }
+  # The OS image to start
+  module /boot/vmlinuz /boot/vmlinuz kdb=fr vga=791 root=/dev/hda1 ...
+  module /boot/initrd /boot/initrd
+}
+```
 
 Now that the platform is correctly configured, the next time you start
 the system, a Secure Boot will be launched, meaning that many boot
@@ -342,5 +365,5 @@ key or the protected object.
 
 We would like to thanks people behind the following projects:
 
-* Intel Trusted Boot: http://sourceforge.net/projects/tboot/
-* Flicker: http://sourceforge.net/projects/flickertcb/
+* Intel Trusted Boot: [http://sourceforge.net/projects/tboot/](http://sourceforge.net/projects/tboot/)
+* Flicker: [http://sourceforge.net/projects/flickertcb/](http://sourceforge.net/projects/flickertcb/)
