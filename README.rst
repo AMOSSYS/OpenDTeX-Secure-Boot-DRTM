@@ -296,7 +296,7 @@ PCR18 and PCR19 have not changed::
 
 Or seal a secret image::
 
-  $ python createStruct.py image zoby.bmp > /tmp/test.data #####################################################################################################x à modifier dans README sur github
+  $ python createStruct.py image zoby.bmp > /tmp/test.data
   $ ./tcg_seal -i /tmp/test.data -o data.seal -z -k key1.key
 
 Put the sealed data (either the message or the image) in the boot directory::
