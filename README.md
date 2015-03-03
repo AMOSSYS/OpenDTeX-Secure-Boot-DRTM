@@ -48,6 +48,8 @@ This software is licensed under the Modified BSD License. See the
 
 ## More Information
 
+| | |
+|-|-|
 | Website  | [https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM](https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM) |
 | Email    | etudes@amossys.fr |
 | Twitter  | Follow AMOSSYS's official accounts ([@amossys](https://twitter.com/Amossys) |
