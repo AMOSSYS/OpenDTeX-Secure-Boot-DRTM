@@ -1,24 +1,24 @@
-====================
-OpenDTeX Secure Boot
-====================
+# OpenDTeX Secure Boot
 
-Project Description
-===================
+## Project Description
 
 The OpenDTeX research project aims at providing trusted building
-blocks to ensure strong security properties during the boot chain and
-to allow secure execution of isolated enclaves on x86
-architectures. OpenDTeX has been achieved with the help of the French
-“`RAPID <http://www.ixarm.com/Projets-d-innovation-duale-RAPID>`_”
-grant process, which targets both civil and defense use cases, through
-a consortium composed of AMOSSYS, Bertin Technologies and Telecom
+blocks to ensure **strong security properties during the boot chain**
+and to allow **secure execution of isolated enclaves** on x86
+architectures.
+
+OpenDTeX has been achieved with the help of the French “`RAPID
+<http://www.ixarm.com/Projets-d-innovation-duale-RAPID>`_” grant
+process, which targets both civil and defense use cases, through a
+consortium composed of AMOSSYS, Bertin Technologies and Telecom
 ParisTech.
 
-This project leverages TCG technologies, such as TPM and DRTM, to
-provide trusted execution of a minimal TCB (Trusted Computing
-Base). Besides, each building block can display proof of integrity up
-to the platform user, by implementing the concept of trusted banner,
-thus creating a trusted path between the user and the TCB.
+This project leverages **TCG** technologies, such as **TPM** and
+**DRTM**, to provide trusted execution of a minimal TCB (Trusted
+Computing Base). Besides, each building block can display proof of
+integrity up to the platform user, by implementing the concept of
+trusted banner, thus creating a trusted path between the user and the
+TCB.
 
 The results of this project have been integrated in a Linux-based
 prototype, as well as in the PolyXene multi-level security operating
@@ -27,8 +27,8 @@ system.
 We provide here the implementation of the Secure Boot component in
 DRTM mode.
 
-Authors and Sponsors
-====================
+
+## Authors and Sponsors
 
 See the top distribution file ``AUTHORS.txt`` for the detailed and updated list
 of authors.
@@ -39,21 +39,21 @@ Project sponsors:
 * Bertin Technologies: `http://www.bertin.fr <http://www.bertin.fr>`_
 * Telecom ParisTech: `https://www.telecom-paristech.fr <https://www.telecom-paristech.fr>`_
 
-License
-=======
+
+## License
 
 This software is licensed under the Modified BSD License. See the
 ``COPYING.txt`` file for the full license text.
 
-More Information
-================
+
+## More Information
 
 :Website: `https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM <https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM>`_
 :Email: `etudes@amossys.fr <etudes@amossys.fr>`_
 :Twitter: Follow AMOSSYS's official accounts (`@amossys <https://twitter.com/Amossys>`_)
 
-OpenDTeX developments
-=====================
+
+## OpenDTeX developments
 
 OpenDTeX work notably include:
 
@@ -63,19 +63,19 @@ OpenDTeX work notably include:
 * An extension of Grub 2 (i.e. an SRTM implementation)
 * An extension of TBoot, with the implementation of a dedicated DRTM MLE
 
-Comparison with similar tools
-=============================
 
-* Trusted Grub: this tool permits to extend the trust chain
+## Comparison with similar tools
+
+* **Trusted Grub**: this tool permits to extend the trust chain
   by measuring components that are executed beyond the BIOS, in SRTM mode.
-* Trusted Grub: this tool permits to start a new trust chain, in DRTM
+* **Trusted Boot**: this tool permits to start a new trust chain, in DRTM
   mode. Is also permits to verify the integrity of the Linux kernel
   and its associated initrd.
-* Bitlocker (in TPM mode): this tools allows to seal the master key
+* **Bitlocker** (in TPM mode): this tools allows to seal the master key
   with the TPM so that decryption is possible only if the platform
   integrity is correct. It only works through a SRTM (which means a large
   TCB).
-* Anti-Evil-Maid proof of concept from Joanna Rutkowska, which
+* **Anti-Evil-Maid** proof of concept from Joanna Rutkowska, which
   implements the concept of secure banner. This PoC only supports
   SRTM.
 
@@ -85,11 +85,9 @@ provides explicit trust attestation to the user thanks to a shared
 secret (the secret banner).
 
 
-Design of the Secure Boot in DRTM mode
-======================================
+## Design of the Secure Boot in DRTM mode
 
-DRTM implementation
--------------------
+### DRTM implementation
 
 Regarding the DRTM implementation, we rely on the Intel Trusted Boot
 extension combined with a dedicated MLE (Measured Launch
@@ -102,8 +100,8 @@ responsible for those new functionalities is called TLoader. We
 describe its architecture and usage in the current chapter, after a
 brief reminder regarding Trusted Boot.
 
-Design of Trusted Boot
-----------------------
+
+### Boot sequence of Trusted Boot
 
 In Trusted Boot, the execution flow is as follow:
 
@@ -121,8 +119,7 @@ In Trusted Boot, the execution flow is as follow:
   transferred to the Linux kernel.
 
 
-Description of the TLoader MLE
-------------------------------
+### Description of the TLoader MLE
 
 The OpenDTeX MLE, called TLoader, provides the following functionalities:
 
@@ -136,38 +133,35 @@ The OpenDTeX MLE, called TLoader, provides the following functionalities:
 The OpenDTeX TLoader currently supports the following commands,
 received through multiboot structure of Grub.
 
-* tpm_loadkey: loads a cryptographic key in the TPM volatile memory.
+* **tpm_loadkey**: loads a cryptographic key in the TPM volatile memory.
 * tpm_banner: unseals a secure banner (either a text or an image) and
   presents it to the user.
-* launch: loads a kernel in memory, measures its integrity and extends
+* **launch**: loads a kernel in memory, measures its integrity and extends
   the result to a specific TPM PCR register.
-* initrd: loads an initrd file in memory, measures its integrity and
+* **initrd**: loads an initrd file in memory, measures its integrity and
   extends the result to a specific TPM PCR register.
-* tpm_launch: loads an encrypted kernel in memory, unseals it,
+* **tpm_launch**: loads an encrypted kernel in memory, unseals it,
   measures its integrity and extends the result to a specific TPM PCR
   register.
-* tpm_initrd: loads an encrypted initrd file in memory, unseals it,
+* **tpm_initrd**: loads an encrypted initrd file in memory, unseals it,
   measures its integrity and extends the result to a specific TPM PCR
   register.
-* logging: specifies the logging verbosity level.
+* **logging**: specifies the logging verbosity level.
 
 
-The Secure Banner design
-------------------------
+## The Secure Banner
 
-As mentionned above, the secure banner principle intends to provide
-explicit local attestation of the platform integrity to the user. The
-secure banner is in fact a message or image only known from the user
-and encrypted with a TPM cryptographic key, so that it can only be
-decrypted if the platform integrity is what is expected by the
-user. Thus, this text or image have to be sealed in order to
-caracterize the integrity of the plateform. In other words, at boot
-time, if the secure banner can be unsealed, this means that the
-platform integrity is correct.
+The secure banner principle intends to provide explicit local
+attestation of the platform integrity to the user. The secure banner
+is in fact a message or image only known from the user and encrypted
+with a TPM cryptographic key, so that it can only be decrypted if the
+platform integrity is what is expected by the user. Thus, this text or
+image have to be sealed in order to caracterize the integrity of the
+plateform. In other words, at boot time, if the secure banner can be
+unsealed, this means that the platform integrity is correct.
 
 
-Hardware requirements
----------------------
+### Hardware requirements
 
 Secure Boot component requires some hardware support:
 
@@ -180,21 +174,20 @@ Basically, a platform that have an Intel VPro sticker should be compatible.
 Besides those hardware requirements, they have to be activated in the BIOS.
 
 
-Compilation and installation of the DRTM components
----------------------------------------------------
+### Compilation and installation of the DRTM components
 
 This chapter presents the different steps required to compile and install the OpenDTeX Secure Boot components in DRTM mode, which are:
 
-* libtpm : a library that provides an API to communicate with the TPM.
-* libuc : a library that provides basic libc functionalities such as memory and strings handling.
-* libuvideo : a library that provides direct access to the video card framebuffer.
-* libtxt : a library that exposes functionalities linked with the Intel SMX instruction set and management of TXT heap/registers.
-* Trusted Boot : we rely on Trusted Boot for the preparation and launch of the DRTM environemnt.
-* AC SINIT : a signed binary provided by Intel, which is responsible for verifying that the platform is properly compatible and configured.
-* Tloader : a library that implements a MLE (i.e. the component that is called by the AC SINIT during a DRTM) and provides services such as the secure banner and the unsealing of critical components.
+* **libtpm**: a library that provides an API to communicate with the TPM.
+* **libuc**: a library that provides basic libc functionalities such as memory and strings handling.
+* **libuvideo**: a library that provides direct access to the video card framebuffer.
+* **libtxt**: a library that exposes functionalities linked with the Intel SMX instruction set and management of TXT heap/registers.
+* **Trusted Boot**: we rely on Trusted Boot for the preparation and launch of the DRTM environemnt.
+* **AC SINIT**: a signed binary provided by Intel, which is responsible for verifying that the platform is properly compatible and configured.
+* **Tloader**: a library that implements a MLE (i.e. the component that is called by the AC SINIT during a DRTM) and provides services such as the secure banner and the unsealing of critical components.
 
 
-### Dependencies
+#### Dependencies
 
 In order to compile the OpenDTeX Secure Boot components, you should have:
 
@@ -205,7 +198,7 @@ In order to compile the OpenDTeX Secure Boot components, you should have:
 * m4
 * autotools-dev
 
-### Compilation and installation of libuc
+#### Compilation and installation of libuc
 
 In "libuc/"::
 
@@ -214,7 +207,7 @@ In "libuc/"::
   $ make
   $ sudo make install
 
-### Compilation and installation of uvideo
+#### Compilation and installation of uvideo
 
 In "libuvideo/"::
 
@@ -223,7 +216,7 @@ In "libuvideo/"::
   $ make
   $ sudo make install
 
-### Compilation and installation of libtpm
+#### Compilation and installation of libtpm
 
 In "libtpm/"::
 
@@ -232,7 +225,7 @@ In "libtpm/"::
   $ make
   $ sudo make install
 
-### Compilation and installation of libtxt
+#### Compilation and installation of libtxt
 
 In "libtxt/"::
 
@@ -241,7 +234,7 @@ In "libtxt/"::
   $ make
   $ sudo make install
 
-### Compilation and installation of Tloader
+#### Compilation and installation of Tloader
 
 In "tloader/"::
 
@@ -252,7 +245,7 @@ In "tloader/"::
 This last step will generate a file tloader.gz. You have to place this
 file in the directory "/boot/".
 
-### Compilation and installation of Trusted Boot
+#### Compilation and installation of Trusted Boot
 
 Trusted Boot in available on Sourceforge: http://sourceforge.net/projects/tboot/
 
@@ -263,7 +256,7 @@ Once the archive has been downloaded, go inside the tboot/ directory, and then::
 
 This last step will copy the file tboot.gz (the loader) in the directory "/boot/".
 
-### Deployment of the AC SINIT module
+#### Deployment of the AC SINIT module
 
 You have to retrieve the AC SINIT module that is compatible with your
 chipset/processor on Intel website: http://software.intel.com/en-us/articles/intel-trusted-execution-technology.
@@ -271,8 +264,7 @@ chipset/processor on Intel website: http://software.intel.com/en-us/articles/int
 The AC SINIT module have to be copied in the directory "/boot/".
 
 
-Preparation of the Secure Banner
---------------------------------
+### Preparation of the Secure Banner
 
 Create a TPM key, such that it can be loaded again inside the TPM
 memory if the PCR1 and PCR2 have the same content that they had during
@@ -305,8 +297,7 @@ Put the sealed data (either the message or the image) in the boot directory::
   $ sudo cp data.seal /boot/opendtex/data.seal
 
 
-Configuration of Grub
----------------------
+### Configuration of Grub
 
 Here is a Grub 2 configuration file example, that permits to launch Trusted Boot, then to execute a DRTM, and then to give execution flow to the TLoader MLE. The TLoader then interpret the command::
 
@@ -347,8 +338,7 @@ will get a error when the TPM attempts to unseal either the protected
 key or the protected object.
 
 
-Acknowledgment
-==============
+## Acknowledgment
 
 We would like to thanks people behind the following projects:
 
