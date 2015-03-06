@@ -52,7 +52,7 @@ This software is licensed under the Modified BSD License. See the
 | ------   | -----  |
 | Website  | [https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM](https://github.com/AMOSSYS/OpenDTeX-Secure-Boot-DRTM) |
 | Email    | etudes@amossys.fr |
-| Twitter  | Follow AMOSSYS's official accounts ([@amossys](https://twitter.com/Amossys) |
+| Twitter  | Follow AMOSSYS's official accounts ([@amossys](https://twitter.com/Amossys)) |
 
 
 ## OpenDTeX developments
@@ -63,7 +63,7 @@ OpenDTeX work notably include:
 * A minimal TSS API library independent from the OS
 * A set of tools to manipulate the TPM.
 * An extension of Grub 2 (i.e. an SRTM implementation)
-* An extension of TBoot, with the implementation of a dedicated DRTM MLE
+* The implementation of a dedicated DRTM MLE extension (based on Trusted Boot)
 
 
 ## Comparison with similar tools
@@ -92,12 +92,12 @@ secret (the secret banner).
 ### DRTM implementation
 
 Regarding the DRTM implementation, we rely on the Intel Trusted Boot
-extension combined with a dedicated MLE (Measured Launch
-Environment). In Trusted Boot, the associated MLE is responsible for
+extension combined with a dedicated MLE (Measured Launch Environment)
+extension. In Trusted Boot, the associated MLE is responsible for
 verifying the integrity of the Linux kernel and its initrd file by
 comparing their hash to a reference one. In OpenDTeX, this MLE is
 modified to integrate more functionalities (the secure banner, the
-unsealing of critical components, etc.). The modified MLE that is
+unsealing of critical components, etc.). The MLE extension that is
 responsible for those new functionalities is called TLoader. We
 describe its architecture and usage in the current chapter, after a
 brief reminder regarding Trusted Boot.
@@ -121,9 +121,10 @@ In Trusted Boot, the execution flow is as follow:
   transferred to the Linux kernel.
 
 
-### Description of the TLoader MLE
+### Description of the TLoader
 
-The OpenDTeX MLE, called TLoader, provides the following functionalities:
+The OpenDTeX MLE extension, called TLoader, provides the following
+functionalities:
 
 * The capability to extend the DRTM trust chain.
 * The secure banner, to allow explicit local attestation of platform
